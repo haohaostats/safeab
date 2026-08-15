@@ -43,6 +43,11 @@ remotes::install_github("haohaostats/safeab")
 The package provides a compact workflow:
 
 ```r
+library(safeab)
+
+# Replace this synthetic example with your study-dose data frame.
+trial_data <- example_safeab_data()
+
 dat <- safeab_data(
   trial_data,
   target = "target",
