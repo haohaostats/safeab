@@ -141,13 +141,13 @@ graphics::points(
 )
 selected <- decision$selected_row
 graphics::arrows(
-  tab$dose[selected] + 1.05, 0.09,
+  tab$dose[selected] + 0.62, 0.075,
   tab$dose[selected] + 0.08, 0.032,
   length = 0.10, angle = 24, code = 2,
   col = red, lwd = 1.8
 )
 graphics::text(
-  tab$dose[selected] + 1.15, 0.09, "Recommended", pos = 4,
+  tab$dose[selected] + 0.72, 0.075, "Recommended", pos = 4,
   col = red, font = 2, cex = 0.79
 )
 graphics::legend(

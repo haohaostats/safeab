@@ -135,10 +135,10 @@ plot.safeab_recommendation <- function(x, show_intervals = TRUE, ...) {
   selected <- x$selected_row
   if (!is.na(selected)) {
     direction <- if (dose[selected] <= mean(range(dose))) 1 else -1
-    label_x <- dose[selected] + direction * 0.28 * dose_span
+    label_x <- dose[selected] + direction * 0.15 * dose_span
     label_y <- 0.12 * y_max
     graphics::arrows(
-      label_x - direction * 0.025 * dose_span, label_y,
+      label_x - direction * 0.015 * dose_span, label_y,
       dose[selected] + direction * 0.012 * dose_span, status_y * 1.25,
       length = 0.10, angle = 24, code = 2,
       col = colors["recommendation"], lwd = 1.8
