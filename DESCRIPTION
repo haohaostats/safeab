@@ -1,0 +1,25 @@
+Package: safeab
+Type: Package
+Title: Safety-Aware Selective Bayesian Borrowing for Dose-Response Studies
+Version: 1.0.0
+Authors@R: person("SAFE-AB", "Development Team", email = "maintainer@safeab.org", role = c("aut", "cre"))
+Description: Fits target-study dose-response models with endpoint-specific,
+    conflict-adaptive borrowing from external studies. The package reports
+    borrowing weights and borrowed effective sample sizes, produces posterior
+    predictions, constructs safety-admissible dose sets with an optional
+    target-only veto, and recommends doses using posterior efficacy.
+License: MIT + file LICENSE
+URL: https://github.com/haohaostats/safeab
+BugReports: https://github.com/haohaostats/safeab/issues
+Encoding: UTF-8
+Depends: R (>= 4.2.0)
+Imports:
+    aghq,
+    graphics,
+    grDevices,
+    stats
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
