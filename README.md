@@ -62,8 +62,26 @@ dat <- safeab_data(
 fit <- fit_safeab(dat)
 summary(fit)
 borrowing_summary(fit)
-predict(fit, newdata = seq(0, 1, length.out = 21))
+predict(
+  fit,
+  newdata = seq(0, 1, length.out = 21),
+  dose_scale = "standardized"
+)
 recommend_dose(fit, toxicity_limit = 0.30)
+```
+
+## Plot model outputs
+
+```r
+# LOCAL and SAFE-AB posterior dose-response curves
+plot(fit)
+
+# Endpoint-specific donor borrowing and BESS
+plot_borrowing(fit)
+
+# Safety, efficacy, admissibility, and the recommended dose
+recommendation <- recommend_dose(fit, toxicity_limit = 0.30)
+plot(recommendation)
 ```
 
 ## Inspect selective borrowing

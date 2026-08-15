@@ -8,3 +8,4 @@
 - Added safety-admissible dose sets with an optional target-only veto.
 - Added efficacy-guided dose recommendation with optional user-defined utility.
 - Added plotting, synthetic examples, documentation, and package tests.
+- Added public posterior, borrowing-diagnostic, and dose-recommendation plots.

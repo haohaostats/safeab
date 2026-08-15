@@ -17,7 +17,8 @@ Imports:
     aghq,
     graphics,
     grDevices,
-    stats
+    stats,
+    tools
 Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

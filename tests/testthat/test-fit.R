@@ -32,6 +32,14 @@ test_that("the local veto has the non-override property", {
   recommendation <- recommend_dose(fit)
   expect_s3_class(recommendation, "safeab_recommendation")
   expect_equal(nrow(recommendation$dose_table), 4)
+
+  image_file <- tempfile(fileext = ".png")
+  grDevices::png(image_file)
+  expect_no_error(plot(fit))
+  expect_no_error(plot_borrowing(fit))
+  expect_no_error(plot(recommendation))
+  grDevices::dev.off()
+  expect_true(file.exists(image_file))
 })
 
 test_that("target-only fitting gives zero borrowed sample size", {
