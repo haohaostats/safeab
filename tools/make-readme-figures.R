@@ -15,6 +15,7 @@ blue_fill <- grDevices::adjustcolor(blue, alpha.f = 0.16)
 orange <- "#D97706"
 green <- "#0F766E"
 pink <- "#B94E78"
+red <- "#C43D3D"
 
 open_png <- function(filename, width = 1600, height = 720) {
   grDevices::png(
@@ -139,19 +140,15 @@ graphics::points(
   col = ifelse(tab$admissible, green, pink), cex = 1.05, lwd = 1.7
 )
 selected <- decision$selected_row
-graphics::segments(
-  tab$dose[selected] + 0.04, 0.03,
-  tab$dose[selected] + 0.38, 0.085,
-  col = green, lwd = 1.4
-)
-graphics::segments(
-  tab$dose[selected] + 0.38, 0.085,
-  tab$dose[selected] + 0.92, 0.085,
-  col = green, lwd = 1.4
+graphics::arrows(
+  tab$dose[selected] + 1.05, 0.09,
+  tab$dose[selected] + 0.08, 0.032,
+  length = 0.10, angle = 24, code = 2,
+  col = red, lwd = 1.8
 )
 graphics::text(
-  tab$dose[selected] + 1.02, 0.085, "Recommended", pos = 4,
-  col = green, font = 2, cex = 0.79
+  tab$dose[selected] + 1.15, 0.09, "Recommended", pos = 4,
+  col = red, font = 2, cex = 0.79
 )
 graphics::legend(
   "topleft",
