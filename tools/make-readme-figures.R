@@ -140,12 +140,18 @@ graphics::points(
 )
 selected <- decision$selected_row
 graphics::segments(
-  tab$dose[selected], 0.055, tab$dose[selected], 0.13,
+  tab$dose[selected] + 0.04, 0.03,
+  tab$dose[selected] + 0.38, 0.085,
+  col = green, lwd = 1.4
+)
+graphics::segments(
+  tab$dose[selected] + 0.38, 0.085,
+  tab$dose[selected] + 0.92, 0.085,
   col = green, lwd = 1.4
 )
 graphics::text(
-  tab$dose[selected], 0.145, "Recommended", col = green,
-  font = 2, cex = 0.79
+  tab$dose[selected] + 1.02, 0.085, "Recommended", pos = 4,
+  col = green, font = 2, cex = 0.79
 )
 graphics::legend(
   "topleft",
