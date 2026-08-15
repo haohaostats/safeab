@@ -1,7 +1,6 @@
 #' Generate a small synthetic SAFE-AB example
 #'
-#' This deterministic dataset is intended for examples and interface checks;
-#' it does not reproduce any analysis from the SAFE-AB paper.
+#' This deterministic dataset is intended for examples and interface checks.
 #'
 #' @return A data frame with one target and two donor studies.
 #' @export

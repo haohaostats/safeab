@@ -10,6 +10,5 @@ example_safeab_data()
 A data frame with one target and two donor studies.
 }
 \description{
-This deterministic dataset is intended for examples and interface checks;
-it does not reproduce any analysis from the SAFE-AB paper.
+This deterministic dataset is intended for examples and interface checks.
 }
