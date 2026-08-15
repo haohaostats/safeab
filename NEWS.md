@@ -9,3 +9,5 @@
 - Added efficacy-guided dose recommendation with optional user-defined utility.
 - Added plotting, synthetic examples, documentation, and package tests.
 - Added public posterior, borrowing-diagnostic, and dose-recommendation plots.
+- The recommendation table now includes `utility` only when a user-defined
+  utility function is supplied.

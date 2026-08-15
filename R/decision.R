@@ -62,7 +62,8 @@ admissible_doses <- function(
 #'   efficacy is within this absolute margin of the best admissible dose.
 #' @param utility Optional function receiving the completed dose table and
 #'   returning one finite utility value per row. The admissible dose with maximum
-#'   utility is selected.
+#'   utility is selected. The output contains a `utility` column only when this
+#'   function is supplied.
 #' @param dose_scale Scale used by `doses`.
 #' @return A `safeab_recommendation` object with the recommendation and dose table.
 #' @export
@@ -93,6 +94,14 @@ recommend_dose <- function(
   safety$efficacy <- efficacy$estimate
   safety$efficacy_lower <- efficacy$lower
   safety$efficacy_upper <- efficacy$upper
+  if (!is.null(utility)) {
+    if (!is.function(utility)) stop("utility must be a function or NULL.", call. = FALSE)
+    value <- utility(safety)
+    if (!is.numeric(value) || length(value) != nrow(safety) || any(!is.finite(value))) {
+      stop("utility must return one finite numeric value per candidate dose.", call. = FALSE)
+    }
+    safety$utility <- value
+  }
   candidate <- which(safety$admissible)
   selected <- integer()
   if (length(candidate)) {
@@ -100,18 +109,9 @@ recommend_dose <- function(
       best <- max(safety$efficacy[candidate])
       eligible <- candidate[safety$efficacy[candidate] >= best - efficacy_margin]
       selected <- eligible[which.min(safety$x[eligible])]
-      safety$utility <- NA_real_
     } else {
-      if (!is.function(utility)) stop("utility must be a function or NULL.", call. = FALSE)
-      value <- utility(safety)
-      if (!is.numeric(value) || length(value) != nrow(safety) || any(!is.finite(value))) {
-        stop("utility must return one finite numeric value per candidate dose.", call. = FALSE)
-      }
-      safety$utility <- value
-      selected <- candidate[which.max(value[candidate])]
+      selected <- candidate[which.max(safety$utility[candidate])]
     }
-  } else {
-    safety$utility <- NA_real_
   }
   result <- list(
     recommended_dose = if (length(selected)) safety$dose[selected] else NA_real_,

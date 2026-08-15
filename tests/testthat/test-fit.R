@@ -32,6 +32,14 @@ test_that("the local veto has the non-override property", {
   recommendation <- recommend_dose(fit)
   expect_s3_class(recommendation, "safeab_recommendation")
   expect_equal(nrow(recommendation$dose_table), 4)
+  expect_false("utility" %in% names(recommendation$dose_table))
+
+  utility_recommendation <- recommend_dose(
+    fit,
+    utility = function(dose_table) dose_table$efficacy - 0.5 * dose_table$toxicity
+  )
+  expect_true("utility" %in% names(utility_recommendation$dose_table))
+  expect_true(all(is.finite(utility_recommendation$dose_table$utility)))
 
   image_file <- tempfile(fileext = ".png")
   grDevices::png(image_file)

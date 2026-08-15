@@ -29,7 +29,8 @@ efficacy is within this absolute margin of the best admissible dose.}
 
 \item{utility}{Optional function receiving the completed dose table and
 returning one finite utility value per row. The admissible dose with maximum
-utility is selected.}
+utility is selected. The output contains a \code{utility} column only when this
+function is supplied.}
 
 \item{dose_scale}{Scale used by \code{doses}.}
 }
