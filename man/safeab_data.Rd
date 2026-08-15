@@ -13,7 +13,7 @@ safeab_data(
   toxicity_total = "n_toxicity",
   efficacy_events = "efficacy",
   efficacy_total = "n_efficacy",
-  dose_transform = c("range", "log_range", "none")
+  dose_transform = c("rank", "range", "log_range", "none")
 )
 }
 \arguments{
@@ -29,9 +29,11 @@ and evaluated totals. Both may be \code{NULL} when toxicity is unavailable.}
 \item{efficacy_events, efficacy_total}{Column names for efficacy event counts
 and evaluated totals. Both may be \code{NULL} when efficacy is unavailable.}
 
-\item{dose_transform}{Dose transformation: pooled range standardization,
-log-dose range standardization, or no transformation. With \code{"none"}, dose
-values must already lie in \verb{[0, 1]}.}
+\item{dose_transform}{Dose transformation. The default, \code{"rank"}, maps the
+ordered doses within each study to equally spaced positions on \verb{[0, 1]}.
+Alternatives are pooled range standardization, pooled log-dose range
+standardization, or no transformation. With \code{"none"}, dose values must
+already lie in \verb{[0, 1]}.}
 }
 \value{
 A validated \code{safeab_data} object.

@@ -15,8 +15,10 @@ fit_safeab(
 \arguments{
 \item{data}{A \code{safeab_data} object.}
 
-\item{donors}{Optional character vector selecting donor studies. By default,
-all non-target studies in \code{data} are used.}
+\item{donors}{Optional character vector used for every fitted endpoint, or a
+named list defining endpoint-specific donor sets, for example
+\code{list(toxicity = c("A", "B"), efficacy = "A")}. By default, all
+non-target studies in \code{data} are used for every endpoint.}
 
 \item{endpoints}{Endpoints to fit. The default fits every available endpoint.}
 

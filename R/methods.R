@@ -2,7 +2,12 @@
 print.safeab_fit <- function(x, ...) {
   cat("SAFE-AB fit\n")
   cat("  Target:", x$target, "\n")
-  cat("  Donors:", if (length(x$donors)) paste(x$donors, collapse = ", ") else "none", "\n")
+  cat("  Donors by endpoint:\n")
+  for (endpoint in x$endpoints) {
+    endpoint_donors <- x$donors_by_endpoint[[endpoint]]
+    cat("   ", endpoint, ":",
+        if (length(endpoint_donors)) paste(endpoint_donors, collapse = ", ") else "none", "\n")
+  }
   cat("  Endpoints:", paste(x$endpoints, collapse = ", "), "\n")
   bess <- effective_sample_size(x)
   cat("  Borrowed effective sample size:",
@@ -26,6 +31,7 @@ summary.safeab_fit <- function(object, ...) {
     call = object$call,
     target = object$target,
     donors = object$donors,
+    donors_by_endpoint = object$donors_by_endpoint,
     endpoints = object$endpoints,
     endpoint_summary = data.frame(
       endpoint = object$endpoints,
@@ -43,7 +49,13 @@ summary.safeab_fit <- function(object, ...) {
 print.summary.safeab_fit <- function(x, ...) {
   cat("SAFE-AB model summary\n")
   cat("Target:", x$target, "\n")
-  cat("Donors:", if (length(x$donors)) paste(x$donors, collapse = ", ") else "none", "\n\n")
+  cat("Donors by endpoint:\n")
+  for (endpoint in x$endpoints) {
+    endpoint_donors <- x$donors_by_endpoint[[endpoint]]
+    cat(" ", endpoint, ":",
+        if (length(endpoint_donors)) paste(endpoint_donors, collapse = ", ") else "none", "\n")
+  }
+  cat("\n")
   print(x$endpoint_summary, row.names = FALSE, digits = 3)
   if (!is.null(x$donor_summary) && nrow(x$donor_summary)) {
     cat("\nBorrowing by donor:\n")

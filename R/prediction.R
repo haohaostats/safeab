@@ -12,12 +12,27 @@
   } else {
     dose <- values
     transform <- object$data$dose_transform
-    transformed <- if (transform$type == "log_range") {
-      if (any(values <= 0)) stop("Log-dose prediction requires positive doses.", call. = FALSE)
-      log(values)
-    } else values
-    x <- if (transform$type == "none") transformed else
-      (transformed - transform$minimum) / (transform$maximum - transform$minimum)
+    if (transform$type == "rank") {
+      target_rows <- object$data$data[
+        object$data$data$study == object$target, c("dose", "x"), drop = FALSE
+      ]
+      matched <- match(values, target_rows$dose)
+      if (anyNA(matched)) {
+        stop(
+          "With within-study rank standardization, original-dose predictions ",
+          "must use doses observed in the target study; use ",
+          "dose_scale='standardized' for an arbitrary grid.", call. = FALSE
+        )
+      }
+      x <- target_rows$x[matched]
+    } else {
+      transformed <- if (transform$type == "log_range") {
+        if (any(values <= 0)) stop("Log-dose prediction requires positive doses.", call. = FALSE)
+        log(values)
+      } else values
+      x <- if (transform$type == "none") transformed else
+        (transformed - transform$minimum) / (transform$maximum - transform$minimum)
+    }
   }
   if (any(x < 0 | x > 1)) warning("Some prediction doses lie outside the fitted standardized range.", call. = FALSE)
   data.frame(dose = dose, x = x)

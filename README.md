@@ -70,6 +70,19 @@ predict(
 recommend_dose(fit, toxicity_limit = 0.30)
 ```
 
+When toxicity and efficacy have different eligible historical sources, supply
+endpoint-specific donor sets:
+
+```r
+fit <- fit_safeab(
+  dat,
+  donors = list(
+    toxicity = c("donor_A", "donor_B"),
+    efficacy = "donor_A"
+  )
+)
+```
+
 ## Plot model outputs
 
 ```r
@@ -118,8 +131,14 @@ recommendation$dose_table
 ## Input format
 
 `safeab_data()` accepts one row per study-dose combination with aggregated
-binary event counts and totals. Original doses can be range-standardized,
-log-range-standardized, or supplied directly on the standardized scale.
+binary event counts and totals. By default, ordered doses are mapped separately
+within each study to equally spaced positions on `[0, 1]`, matching the SAFE-AB
+study-specific rank scale. Pooled range, pooled log-range, and already
+standardized dose inputs remain available through `dose_transform`.
+
+With the default rank transformation, dose recommendations remain restricted to
+doses observed in the target study. Use `dose_scale = "standardized"` when
+requesting predictions on an arbitrary standardized grid.
 
 Use `?safeab_data`, `?fit_safeab`, and `?recommend_dose` for complete argument
 definitions and return values.

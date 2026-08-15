@@ -59,3 +59,59 @@ test_that("target-only fitting gives zero borrowed sample size", {
   )
   expect_equal(unname(effective_sample_size(fit)), 0)
 })
+
+test_that("endpoint-specific donor sets are fitted independently", {
+  skip_if_not_installed("aghq")
+  dat <- safeab_data(example_safeab_data(), target = "target")
+  fit <- fit_safeab(
+    dat,
+    donors = list(
+      toxicity = c("donor_A", "donor_B"),
+      efficacy = "donor_A"
+    ),
+    control = safeab_control(quadrature_points = 3)
+  )
+  expect_equal(fit$donors_by_endpoint$toxicity, c("donor_A", "donor_B"))
+  expect_equal(fit$donors_by_endpoint$efficacy, "donor_A")
+  expect_setequal(unique(fit$weights$toxicity$donor), c("donor_A", "donor_B"))
+  expect_equal(unique(fit$weights$efficacy$donor), "donor_A")
+
+  common <- fit_safeab(
+    dat, donors = "donor_A",
+    control = safeab_control(quadrature_points = 3)
+  )
+  expect_equal(common$donors_by_endpoint$toxicity, "donor_A")
+  expect_equal(common$donors_by_endpoint$efficacy, "donor_A")
+})
+
+test_that("endpoint-specific donor specifications are validated", {
+  dat <- safeab_data(example_safeab_data(), target = "target")
+  expect_error(
+    fit_safeab(dat, donors = list(toxicity = "donor_A")),
+    "Missing: efficacy"
+  )
+  expect_error(
+    fit_safeab(dat, donors = list(toxicity = "unknown", efficacy = "donor_A")),
+    "Unknown or target donor"
+  )
+  expect_error(
+    fit_safeab(dat, donors = list("donor_A", "donor_B")),
+    "unique endpoint names"
+  )
+  expect_error(
+    fit_safeab(dat, donors = list(toxicity = 1, efficacy = "donor_A")),
+    "character vector or NULL"
+  )
+})
+
+test_that("rank-transformed original-dose predictions use target doses", {
+  skip_if_not_installed("aghq")
+  dat <- safeab_data(example_safeab_data(), target = "target")
+  fit <- fit_safeab(dat, control = safeab_control(quadrature_points = 3))
+  prediction <- predict(fit, newdata = c(1, 4), endpoint = "toxicity")
+  expect_equal(prediction$x, c(0, 2 / 3))
+  expect_error(
+    predict(fit, newdata = 3, endpoint = "toxicity"),
+    "must use doses observed in the target study"
+  )
+})

@@ -25,9 +25,11 @@
 #'   and evaluated totals. Both may be `NULL` when toxicity is unavailable.
 #' @param efficacy_events,efficacy_total Column names for efficacy event counts
 #'   and evaluated totals. Both may be `NULL` when efficacy is unavailable.
-#' @param dose_transform Dose transformation: pooled range standardization,
-#'   log-dose range standardization, or no transformation. With `"none"`, dose
-#'   values must already lie in `[0, 1]`.
+#' @param dose_transform Dose transformation. The default, `"rank"`, maps the
+#'   ordered doses within each study to equally spaced positions on `[0, 1]`.
+#'   Alternatives are pooled range standardization, pooled log-dose range
+#'   standardization, or no transformation. With `"none"`, dose values must
+#'   already lie in `[0, 1]`.
 #' @return A validated `safeab_data` object.
 #' @export
 safeab_data <- function(
@@ -39,7 +41,7 @@ safeab_data <- function(
     toxicity_total = "n_toxicity",
     efficacy_events = "efficacy",
     efficacy_total = "n_efficacy",
-    dose_transform = c("range", "log_range", "none")) {
+    dose_transform = c("rank", "range", "log_range", "none")) {
   if (!is.data.frame(data) || nrow(data) == 0L) {
     stop("data must be a non-empty data frame.", call. = FALSE)
   }
@@ -60,7 +62,21 @@ safeab_data <- function(
   }
 
   transform_input <- dose_value
-  if (dose_transform == "log_range") {
+  if (dose_transform == "rank") {
+    x <- numeric(length(dose_value))
+    for (study_id in unique(study_value)) {
+      index <- which(study_value == study_id)
+      if (length(index) < 2L) {
+        stop(
+          "Within-study rank standardization requires at least two doses in every study; ",
+          study_id, " has only one.", call. = FALSE
+        )
+      }
+      ordered <- index[order(dose_value[index])]
+      x[ordered] <- (seq_along(ordered) - 1) / (length(ordered) - 1)
+    }
+    transform_info <- list(type = "rank")
+  } else if (dose_transform == "log_range") {
     if (any(dose_value <= 0)) stop("log_range requires strictly positive doses.", call. = FALSE)
     transform_input <- log(dose_value)
   }
@@ -68,7 +84,7 @@ safeab_data <- function(
     x <- transform_input
     if (any(x < 0 | x > 1)) stop("With dose_transform='none', doses must lie in [0, 1].", call. = FALSE)
     transform_info <- list(type = "none", minimum = 0, maximum = 1)
-  } else {
+  } else if (dose_transform != "rank") {
     limits <- range(transform_input)
     if (diff(limits) <= 0) stop("At least two distinct pooled doses are required.", call. = FALSE)
     x <- (transform_input - limits[1L]) / diff(limits)
